@@ -12,10 +12,21 @@ class Pitch:
     Pitch class to define Pitch objects
     '''
 
-    def__init__(self,submitted_by,pitch,category):
+    def__init__(self,submitted_by,pitch_name,category,upvote,downvote):
         self.submitted_by=submitted_by
-        self.pitch=pitch
+        self.pitch_name=pitch_name
         self.category=category
+        self.upvote=upvote
+        self.downvote=downvote
+
+        def save_pitch(self):
+            db.session.add(self)
+            db.session.commit()
+
+    @classmethod
+    def get_pitches(cls,id):
+        pitches = Pitch.query.filter_by(pitch_id=id).all()
+        return pitches
 
 
 class review:
@@ -56,6 +67,7 @@ class User(UserMixin,db.Model):
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
     password_secure = db.Column(db.String(255))
+    pitches=db.relationship('Pitch', backref='user', lazy="dynamic")
     @property
     def password(self):
         raise AttributeError('You cannot read the password attribute')
@@ -68,6 +80,10 @@ class User(UserMixin,db.Model):
         def verify_password(self,password):
             return check_password_hash(self.pass_secure,password)
 
+
+        def save_user(self):
+            db.session.add(self)
+            db.session.commit()
 
     def __repr__(self):
         return f'User {self.username}'
