@@ -12,10 +12,10 @@ def index():
     """
     View root page function that return the index page and its data
     """
-    pitches = Pitch.query.all()
+    # pitches = Pitch.query.all()
 
     title = "Home - Welcome to my Pitch"
-    return render_template('index.html',title=title,pitches=pitches)
+    return render_template('index.html',title=title)
 
 @main.route("/post",methods=['GET','POST'])
 @login_required

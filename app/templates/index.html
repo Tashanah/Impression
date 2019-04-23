@@ -4,16 +4,21 @@
 {%block content%}
 <a href="/post">Create Pitch</a>
 
-{%for pitch in pitches%}
-{{pitch.pitch_name}}
-{{pitch.category}}
-{{pitch.submitted_by}}
-{{pitch.upvote}}
-{{pitch.downvote}}
 
 
-<!-- self.submitted_by=submitted_by
-self.pitch_name=pitch_name
-self.category=category
-self.upvote=upvote
-self.downvote=downvote -->
+
+<h2>Here are some of our favourite pitches that are sure to leave a lasting impression.</h2>
+
+<p>About life:</p>
+<li>The most beautiful things in the world cannot be seen or even touched. They must be felt with the heart.</li>
+<li>You can't go back and change the beginning, but you can start where you are and change the ending.</li>
+
+<p>Pick-up lines:</p>
+<li>Even if there wasn't gravity on earth, I'd still fall for you.</li>
+<li>Do you have a band-aid? cuz i scraped my knee falling for you.</li>
+
+<p>Product pitch</p>
+<li>The retail experience reimagined.</li>
+<li>Don't leave home without it.</li>
+
+{%endblock%}

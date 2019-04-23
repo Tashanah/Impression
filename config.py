@@ -22,4 +22,4 @@ config_options ={
 }
 
 
-    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
