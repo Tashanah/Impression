@@ -17,7 +17,7 @@ def index():
     title = "Home - Welcome to my Pitch"
     return render_template('index.html',title=title)
 
-@main.route("/post",methods=['GET','POST'])
+@main.route("/pitch",methods=['GET','POST'])
 @login_required
 def post():
     form = PitchForm()
@@ -33,10 +33,10 @@ def post():
 
         # save pitch method
         new_pitch.save_pitch()
-        return redirect(url_for('main.post'))
+        return redirect(url_for('main.pitch'))
 
     title="Post your pitch"
-    return render_template('post.html',title=title,pitch_form=form)
+    return render_template('pitch.html',title=title,pitch_form=form)
 
 @main.route('/pitch_review/<int:id>',methods=['GET','POST'])
 @login_required
