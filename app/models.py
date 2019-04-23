@@ -12,7 +12,7 @@ class Pitch:
     Pitch class to define Pitch objects
     '''
 
-    def__init__(self,submitted_by,pitch_name,category,upvote,downvote):
+    def __init__(self,submitted_by,pitch_name,category,upvote,downvote):
         self.submitted_by=submitted_by
         self.pitch_name=pitch_name
         self.category=category
@@ -29,7 +29,7 @@ class Pitch:
         return pitches
 
 
-class review:
+class Review:
     '''
     review class to allow users to comment on a pitch
     '''

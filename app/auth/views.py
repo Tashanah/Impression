@@ -1,5 +1,5 @@
 from . import auth 
-from flask import render_template,redirect,url_for,flash,request,abort
+from flask import render_template,redirect,url_for,flash,abort
 from flask_login import login_user
 from ..models import Review, User
 from .forms import RegistrationForm
