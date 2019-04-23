@@ -1,0 +1,19 @@
+{%extends 'base.html'%}
+{%import 'macros.html' as macro%}
+
+{%block content%}
+<a href="/post">Create Pitch</a>
+
+{%for pitch in pitches%}
+{{pitch.pitch_name}}
+{{pitch.category}}
+{{pitch.submitted_by}}
+{{pitch.upvote}}
+{{pitch.downvote}}
+
+
+<!-- self.submitted_by=submitted_by
+self.pitch_name=pitch_name
+self.category=category
+self.upvote=upvote
+self.downvote=downvote -->

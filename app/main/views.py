@@ -1,108 +1,116 @@
+
+  
 from flask import render_template,request,redirect,url_for,abort
 from . import main
-from ..request import get_movies,get_movie,search_movie
-from .forms import ReviewForm,UpdateProfile
-from ..models import Review,User
-from flask_login import login_required
-from .. import db
+from .forms import PitchForm,UpdateProfile,ReviewForm
+from ..import db,photos
+from ..models import User,Pitch,Review
+from flask_login import login_required,current_user
+import markdown2
 
-
-
-
-
-# Views
-@main.route('/')
+#Views
+@main.route("/")
 def index():
+    """
+    View root page function that return the index page and its data
+    """
+    pitches = Pitch.query.all()
 
-   '''
-   View root page function that returns the index page and its data
-   '''
+    title = "Home - Welcome to my Pitch"
+    return render_template('index.html',title=title,pitches=pitches)
 
-   # Getting popular movie
-#    popular_movies = get_movies('popular')
-#    upcoming_movie = get_movies('upcoming')
-#    now_showing_movie = get_movies('now_playing')
-
-   title = 'Home - Welcome to The best Movie Review Website Online'
-
-   search_pitch = request.args.get('pitch_query')
-
-   if search_pitch:
-       return redirect(url_for('.search',pitch_name=search_pitch))
-   else:
-       return render_template('index.html', title = title, popular = popular_movies, upcoming = upcoming_movie, now_showing = now_showing_movie )
-
-
-@main.route('/pitch/<int:pitch_name>')
-def movie(id):
-
-   '''
-   View movie page function that returns the movie details page and its data
-   '''
-   movie = get_movie(id)
-   title = f'{movie.title}'
-   reviews = Review.get_reviews(movie.id)
-
-   return render_template('movie.html',title = title,movie = movie,reviews = reviews)
-
-
-
-@main.route('/search/<movie_name>')
-def search(movie_name):
-   '''
-   View function to display the search results
-   '''
-   movie_name_list = movie_name.split(" ")
-   movie_name_format = "+".join(movie_name_list)
-   searched_movies = search_movie(movie_name_format)
-   title = f'search results for {movie_name}'
-   return render_template('search.html',movies = searched_movies)
-
-
-@main.route('/movie/review/new/<int:id>', methods = ['GET','POST'])
+@main.route("/post",methods=['GET','POST'])
 @login_required
-def new_review(id):
+def post():
+    form = PitchForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        pitch = form.pitch.data
+        category= form.category.data
+        like=0
+        dislike=0
 
-   form = ReviewForm()
+        # Updated pitch instance
+        new_pitch = Pitch(pitch_title=title,pitch_body=pitch,category=category,like=like,dislike=dislike,user=current_user)
 
-   movie = get_movie(id)
+        # save pitch method
+        new_pitch.save_pitch()
+        return redirect(url_for('main.post'))
 
-   if form.validate_on_submit():
-       title = form.title.data
-       review = form.review.data
+    title="Post your pitch"
+    return render_template('post.html',title=title,pitch_form=form)
 
-       new_review = Review(movie.id,title,movie.poster,review)
-       new_review.save_review()
+@main.route('/pitch_review/<int:id>',methods=['GET','POST'])
+@login_required
+def pitch_review(id):
+    pitch=Pitch.query.get_or_404(id)
+    comment= Review.query.all()
+    form=ReviewForm()
 
-   return redirect(url_for('.movie',id = movie.id ))
+    if request.args.get("like"):
+        pitch.like = pitch.like+1
 
-   title = f'{movie.title} review'
-   return render_template('new_review.html',title = title, review_form=form, movie=movie)
+        db.session.add(pitch)
+        db.session.commit()
+
+        return redirect("/pitch_review/{pitch_id}".format(pitch_id=pitch.id))
+
+    elif request.args.get("dislike"):
+        pitch.dislike=pitch.dislike+1
+
+        db.session.add(pitch)
+        db.session.commit()
+
+        return redirect("/pitch_review/{pitch_id}".format(pitch_id=pitch.id))
+
+    if form.validate_on_submit():
+        review = form.review.data
+
+        new_review = Review(id=id,review=review,user_id=current_user.id)
+
+        new_review.save_review()
+        return redirect(url_for('main.pitch_review',id=id))
+    reviews = Review.query.all()
+    return render_template('pitch_review.html',comment=comment,pitch=pitch,review_form=form,reviews=reviews)
 
 @main.route('/user/<uname>')
 def profile(uname):
-   user = User.query.filter_by(username = uname).first()
+    user=User.query.filter_by(username=uname).first()
+    pitches = Pitch.query.filter_by(user_id=user.id).all()
 
-   if user is None:
-       abort(404)
+    if user is None:
+        abort(404)
 
-   return render_template("profile/profile.html", user = user)
+    return render_template("profile/profile.html",user=user,pitches=pitches)
 
-
-@main.route('/user/<uname>/update',methods = ['GET','POST'])
+@main.route('/user/<uname>/update',methods=['GET','POST'])
+@login_required
 def update_profile(uname):
-   user = User.query.filter_by(username = uname).first()
-   if user is None:
-       abort(404)
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
 
-   form = UpdateProfile()
+    form = UpdateProfile()
 
-   if form.validate_on_submit():
-       user.bio = form.bio.data
+    if form.validate_on_submit():
+        user.bio = form.bio.data
 
-       db.session.add(user)
-       db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
-   return redirect(url_for('.profile',uname=user.username))
+        return redirect(url_for('.profile',uname=user.username))
 
-   return render_template('profile/update.html',form =form)
+    return render_template('profile/update.html',form=form)
+
+@main.route('/user/<uname>/update/pic',methods=['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename= photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+
+    return redirect(url_for('main.profile',uname=uname))
+
