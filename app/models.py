@@ -12,12 +12,14 @@ class Pitch:
     Pitch class to define Pitch objects
     '''
 
-    def __init__(self,submitted_by,pitch_name,category,upvote,downvote):
-        self.submitted_by=submitted_by
-        self.pitch_name=pitch_name
-        self.category=category
-        self.upvote=upvote
-        self.downvote=downvote
+    __tablename__ = 'pitches'
+    id = db.Column(db.Integer,primary_key = True)
+    Pitch = db.Column(db.String)
+    submitted_by = db.Column(db.String)
+    upvote = db.Column(db.String)
+    downvote = db.Column(db.String)
+    # posted = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
         def save_pitch(self):
             db.session.add(self)
