@@ -19,7 +19,7 @@ def index():
 
 @main.route("/pitch",methods=['GET','POST'])
 @login_required
-def post():
+def pitch():
     form = PitchForm()
     if form.validate_on_submit():
         title = form.title.data
