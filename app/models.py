@@ -33,12 +33,15 @@ class Review:
     '''
     review class to allow users to comment on a pitch
     '''
-    all_reviews = []
-
-    def __init__(self,pitch,submitted_by,review):
-        self.pitch=pitch
-        self.submitted_by=submitted_by
-        self.review=review
+    __tablename__ = 'reviews'
+    id = db.Column(db.Integer,primary_key = True)
+    Pitch = db.Column(db.String)
+    submitted_by = db.Column(db.String)
+    Review = db.Column(db.String)
+    upvote = db.Column(db.String)
+    downvote = db.Column(db.String)
+    # posted = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
 
     def save_review(self):
         Review.all_reviews.append(self)
