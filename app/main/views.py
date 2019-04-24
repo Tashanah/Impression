@@ -36,7 +36,7 @@ def pitch():
         return redirect(url_for('main.pitch'))
 
     title="Post your pitch"
-    return render_template('pitch.html',title=title,pitch_form=form)
+    return render_template('pitch.html',title=title,form=form)
 
 @main.route('/pitch_review/<int:id>',methods=['GET','POST'])
 @login_required
