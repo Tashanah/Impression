@@ -8,12 +8,19 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/"> Impression </a>
+            <a href="{{url_for('main.pitch')}}">Create Pitch</a>
+<a class="btn btn-outline-info" href="{{url_for('auth.login')}}" >Log In</a>
+           <a class="btn btn-outline-info" href="{{url_for('auth.register')}}">Sign In</a>        
+
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
                 <li><a href="{{url_for('main.profile',uname=current_user.username)}}">Profile</a></li>
-                <li><a href="{{url_for('auth.logout')}}">Sign out</a></li>
+                <!-- <li><a href="{{url_for('auth.logout')}}">Sign out</a></li> -->
+
+                
+                
                 {% else %}
                 <!-- <li><a href="{{url_for('auth.login')}}">Sign in</a></li> -->
                 {%endif%}
