@@ -25,15 +25,19 @@ def pitch():
         title = form.title.data
         pitch = form.pitch.data
         category= form.category.data
-       
+
         upvote=0
         downvote=0
 
         # Updated pitch instance
-        new_pitch = Pitch(Pitch=Pitch,upvote=upvote,downvote=downvote)
+        new_pitch = Pitch()
+        new_pitch.title = title
+        new_pitch.category = category
+        new_pitch.pitch = pitch
 
         # save pitch method
         new_pitch.save_pitch()
+
         return redirect(url_for('main.pitch'))
 
     title="Post your pitch"

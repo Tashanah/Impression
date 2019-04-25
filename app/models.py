@@ -10,14 +10,14 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class Pitch:
+class Pitch(db.Model):
     '''
     Pitch class to define Pitch objects
     '''
 
     __tablename__ = 'pitches'
     id = db.Column(db.Integer, primary_key=True)
-    Pitch = db.Column(db.String)
+    pitch = db.Column(db.String)
     submitted_by = db.Column(db.String)
     upvote = db.Column(db.String)
     downvote = db.Column(db.String)
@@ -34,7 +34,7 @@ class Pitch:
         return pitches
 
 
-class Review:
+class Review(db.Model):
     '''
     review class to allow users to comment on a pitch
     '''
