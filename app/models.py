@@ -2,6 +2,7 @@ from .import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import login_manager
+from datetime import datetime
 
 
 @login_manager.user_loader
@@ -20,7 +21,7 @@ class Pitch:
     submitted_by = db.Column(db.String)
     upvote = db.Column(db.String)
     downvote = db.Column(db.String)
-    # posted = db.Column(db.DateTime,default=datetime.utcnow)
+    posted = db.Column(db.DateTime,default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     def save_pitch(self):
@@ -39,7 +40,7 @@ class Review:
     '''
     __tablename__ = 'reviews'
     id = db.Column(db.Integer, primary_key=True)
-    Pitch = db.Column(db.String)
+    pitch = db.Column(db.String)
     submitted_by = db.Column(db.String)
     Review = db.Column(db.String)
     upvote = db.Column(db.String)

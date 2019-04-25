@@ -25,11 +25,12 @@ def pitch():
         title = form.title.data
         pitch = form.pitch.data
         category= form.category.data
-        like=0
-        dislike=0
+       
+        upvote=0
+        downvote=0
 
         # Updated pitch instance
-        new_pitch = Pitch(pitch_title=title,pitch_body=pitch,category=category,like=like,dislike=dislike,user=current_user)
+        new_pitch = Pitch(Pitch=Pitch,upvote=upvote,downvote=downvote)
 
         # save pitch method
         new_pitch.save_pitch()
